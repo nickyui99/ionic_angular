@@ -4,3 +4,9 @@ ion-list {
   padding: 0;
 }
 
+ion-card-header{
+  ion-card-subtitle {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+}

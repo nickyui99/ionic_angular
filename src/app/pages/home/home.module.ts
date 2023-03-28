@@ -16,6 +16,9 @@ import {PickupCallCardComponent} from "../../components/pickup-call-card/pickup-
     IonicModule,
     HomePageRoutingModule
   ],
-    declarations: [HomePage, PickupCallCardComponent]
+  exports: [
+    PickupCallCardComponent
+  ],
+  declarations: [HomePage, PickupCallCardComponent]
 })
 export class HomePageModule {}

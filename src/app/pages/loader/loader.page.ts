@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from "@angular/router";
+import {navigate} from "ionicons/icons";
 
 @Component({
   selector: 'app-loader',
@@ -7,10 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoaderPage implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
-    console.log("Hello World");
+    this.router.navigate(['login'])
   }
 
 }
