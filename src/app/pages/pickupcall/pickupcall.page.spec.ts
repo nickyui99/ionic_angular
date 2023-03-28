@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { PickupcallPage } from './pickupcall.page';
 import {Router} from "@angular/router";
+import {AppRoutingModule} from "../../app-routing.module";
 
 describe('PickupcallPage', () => {
   let component: PickupcallPage;
@@ -12,11 +13,11 @@ describe('PickupcallPage', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PickupcallPage ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), AppRoutingModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PickupcallPage);
-
+    router = TestBed.get(Router);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
