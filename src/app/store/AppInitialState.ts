@@ -11,5 +11,6 @@ export const AppInitialState: AppState = {
         isLoggingIn: false,
         isRecoveredPassword: false,
         isRecoveringPassword: false,
+
     }
 }

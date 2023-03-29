@@ -16,13 +16,7 @@ describe("Login store", () => {
     });
 
     it('recover password success', function () {
-        const initialState: LoginState = {
-            error: null,
-            isLoggedIn: false,
-            isLoggingIn: false,
-            isRecoveredPassword: false,
-            isRecoveringPassword: true,
-        }
+        const initialState: LoginState = AppInitialState.login;
         const newState = loginReducer(initialState, recoverPasswordSuccess());
         expect(newState).toEqual({
             ...initialState,
@@ -32,20 +26,14 @@ describe("Login store", () => {
         });
     });
 
-    it('recover password success', function () {
-        const initialState: LoginState = {
-            error: null,
-            isLoggedIn: false,
-            isLoggingIn: false,
-            isRecoveredPassword: false,
-            isRecoveringPassword: true,
-        }
+    it('recover password fail', function () {
+        const initialState: LoginState = AppInitialState.login;
         const error = {error: "error"};
         const newState = loginReducer(initialState, recoverPasswordFail({error}));
 
         expect(newState).toEqual({
             ...initialState,
-            error: "error",
+            error: error,
             isRecoveredPassword: false,
             isRecoveringPassword: false
         });
