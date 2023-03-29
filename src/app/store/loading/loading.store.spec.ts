@@ -1,8 +1,6 @@
 import {loadingReducer} from "./loading.reducers";
 import {LoadingState} from "./LoadingState";
 import {hide, show} from "./loading.actions";
-import {ErrorMessageComponent} from "../../components/error-message/error-message.component";
-import {ComponentFixture} from "@angular/core/testing";
 import {createAction} from "@ngrx/store";
 
 describe('Loading store', () => {
