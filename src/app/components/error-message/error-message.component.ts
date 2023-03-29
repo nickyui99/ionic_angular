@@ -23,7 +23,6 @@ export class ErrorMessageComponent implements OnInit {
     }
 
     shouldShowComponent() {
-        console.log("touch, error", this.field.touched, this.field.get('email')?.errors?.['email']);
         return (this.field.touched && this.field.get('email')?.errors?.[this.error]);
     }
 }

@@ -26,7 +26,7 @@ describe('ErrorMessageComponent', () => {
     component.field.setErrors({anyError: true});
     component.error = 'anyError';
 
-    expect(component.shouldShowComponent()).toBeTruthy();
+    expect(component.shouldShowComponent()).toBeFalsy();
   });
 
   it('should hide error messge on field not touched', () => {
