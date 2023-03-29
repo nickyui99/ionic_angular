@@ -10,12 +10,13 @@
                         <ion-label position="floating">Email</ion-label>
                         <ion-input type="email" formControlName="email"></ion-input>
                     </ion-item>
-                    <ion-label color="danger" *ngIf="form.get('email')?.touched || form.get('email')?.errors?.['email']">Email is invalid</ion-label>
+                    <app-error-message *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']" message="Email is mandatory"></app-error-message>
+                    <app-error-message *ngIf="form.get('email')?.errors?.['email']" message="Email is invalid"></app-error-message>
                     <ion-item>
                         <ion-label position="floating">Password</ion-label>
                         <ion-input type="password" formControlName="password"></ion-input>
                     </ion-item>
-                    <ion-label color="danger" >Email is invalid</ion-label>
+                    <app-error-message *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['minlength']" message="Must have minimum 8 characters"></app-error-message>
                     <ion-button color="dark" fill="clear" size="full">Forgot email / password</ion-button>
                     <ion-button color="success" size="full" (click)="login()" [disabled]="!form.valid">Login</ion-button>
                     <ion-button color="success" fill="clear" size="full" (click)="register()">Register</ion-button>
