@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { LoginPage } from './login.page';
 import {Router} from "@angular/router";
 import {AppRoutingModule} from "../../app-routing.module";
-import {navigate} from "ionicons/icons";
+import {ReactiveFormsModule} from "@angular/forms";
 
 describe('LoginPage', () => {
   let component: LoginPage;
@@ -14,7 +14,7 @@ describe('LoginPage', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LoginPage ],
-      imports: [IonicModule.forRoot(), AppRoutingModule]
+      imports: [IonicModule.forRoot(), AppRoutingModule, ReactiveFormsModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginPage);
@@ -23,6 +23,12 @@ describe('LoginPage', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
+
+  it('should create form on init', () => {
+    component.ngOnInit();
+
+    expect(component.form).not.toBeUndefined();
+  });
 
   it('should go to the home page', () => {
     spyOn(router, 'navigate');
