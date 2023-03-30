@@ -79,12 +79,11 @@ describe("Login store", () => {
             ...AppInitialState.login,
             isLoggingIn: true,
         };
-        const user = new User();
-        user.id = "anyId";
-        const newState = loginReducer(initialState, loginFail({user}));
+        const error = {message: "error"};
+        const newState = loginReducer(initialState, loginFail({error}));
         expect(newState).toEqual({
             ...initialState,
-            error: null,
+            error: error,
             isLoggedIn: false,
             isLoggingIn: false,
         })

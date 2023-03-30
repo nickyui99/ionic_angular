@@ -7,4 +7,4 @@ export const recoverPasswordFail = createAction("[Recover password] fail", props
 
 export const login = createAction("[Login]");
 export const loginSuccess = createAction("[Login] Success", props<{ user: User }>());
-export const loginFail = createAction("[Login] Fail", props<{user: User}>());
+export const loginFail = createAction("[Login] Fail", props<{error: any}>());

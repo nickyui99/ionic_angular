@@ -4,7 +4,13 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {LoginPageForm} from "./login.page.form";
 import {Store} from "@ngrx/store";
 import {AppState} from "@capacitor/app";
-import {login, recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "../../store/login/login.actions";
+import {
+  login, loginFail,
+  loginSuccess,
+  recoverPassword,
+  recoverPasswordFail,
+  recoverPasswordSuccess
+} from "../../store/login/login.actions";
 import {hide, show} from "../../store/loading/loading.actions";
 import {ToastController} from "@ionic/angular";
 import {LoginState} from "../../store/login/LoginState";
@@ -34,15 +40,15 @@ export class LoginPage implements OnInit, OnDestroy {
   ngOnInit() {
     // @ts-ignore
     const loginStateSubscription = this.store.select("login").subscribe((loginState: LoginState)=> {
-      console.log(loginState)
+      console.log(loginState);
       this.onIsRecoveringPassword(loginState);
       this.onIsRecoveredpassword(loginState);
-      this.onIsRecoverPasswordFail(loginState);
-      this.toggleLoading(loginState);
 
-      if(loginState.isLoggingIn){
-        this.store.dispatch(show());
-      }
+      this.onIsLoggingIn(loginState);
+      this.onIsLoggedIn(loginState);
+      this.onError(loginState);
+
+      this.toggleLoading(loginState);
     });
   }
 
@@ -61,6 +67,24 @@ export class LoginPage implements OnInit, OnDestroy {
     }
   }
 
+  private onIsLoggingIn(loginState: LoginState){
+    if (loginState.isLoggingIn){
+      const email = this.form.get('email')?.value;
+      const password = this.form.get('password')?.value;
+      this.authService.login(email,password).subscribe(user => {
+        this.store.dispatch(loginSuccess({user}));
+      }, (error) => {
+        this.store.dispatch(loginFail({error}));
+      })
+    }
+  }
+
+  private onIsLoggedIn(loginState:LoginState){
+    if(loginState.isLoggedIn){
+      this.router.navigate(['home']);
+    }
+  }
+
   private async onIsRecoveringPassword(loginState: LoginState){
     if (loginState.isRecoveringPassword) {
       console.log("is recovering password");
@@ -72,7 +96,7 @@ export class LoginPage implements OnInit, OnDestroy {
     }
   }
 
-  private async onIsRecoverPasswordFail(loginState: LoginState){
+  private async onError(loginState: LoginState){
 
     if(loginState.error){
       console.log("is recover password fail");
@@ -112,7 +136,6 @@ export class LoginPage implements OnInit, OnDestroy {
 
   login(){
     this.store.dispatch(login());
-    // this.router.navigate(['home']);
   }
 
   register(){

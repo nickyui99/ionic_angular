@@ -12,6 +12,9 @@ import {AppState} from "../../store/AppState";
 import {recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "../../store/login/login.actions";
 import {AppStoreModule} from "../../store/AppStoreModule";
 import {LoginState} from "../../store/login/LoginState";
+import {AuthService} from "../../services/auth/auth.service";
+import {User} from "../../model/user/User";
+import {of, throwError} from "rxjs";
 
 describe('LoginPage', () => {
     let component: LoginPage;
@@ -19,6 +22,7 @@ describe('LoginPage', () => {
     let router: Router;
     let store: Store<AppState>;
     let toastController: ToastController;
+    let authService: AuthService;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -37,6 +41,7 @@ describe('LoginPage', () => {
         fixture = TestBed.createComponent(LoginPage);
         router = TestBed.get(Router);
         store = TestBed.get(Store);
+        authService = TestBed.get(AuthService);
         toastController = TestBed.get(ToastController);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -121,19 +126,44 @@ describe('LoginPage', () => {
     });
 
     it('should hide loading and send user to home page when user has logged in', function () {
+        spyOn(router, 'navigate');
+        spyOn(authService, 'login').and.returnValues(of(new User()));
+
         fixture.detectChanges();
 
         component.form.get('email')?.setValue('valid@mail.com');
         component.form.get('password')?.setValue('anyPassword');
         fixture.debugElement.nativeElement.querySelector('#loginButton').click();
 
-        store.select('loading').subscribe(loadingState => {
-            expect(loadingState.show).toBeTruthy();
-        });
         store.select('login').subscribe((loginState:LoginState) => {
             expect(loginState.isLoggedIn).toBeTruthy();
         });
 
+        store.select('loading').subscribe(loadingState => {
+            expect(loadingState.show).toBeFalsy();
+        });
+
+        expect(router.navigate).toHaveBeenCalledWith(['home']);
+    });
+
+    it('should hide loading and show error when user couldnt login', function () {
+        spyOn(authService, 'login').and.returnValues(throwError({message: 'error'}));
+        spyOn(toastController, 'create').and.returnValues(<any> Promise.resolve({present: () => {}}));
+
+        fixture.detectChanges();
+
+        component.form.get('email')?.setValue('error@mail.com');
+        component.form.get('password')?.setValue('anyPassword');
+        fixture.debugElement.nativeElement.querySelector('#loginButton').click();
+
+        store.select('loading').subscribe(loadingState => {
+            expect(loadingState.show).toBeFalsy();
+        });
+        store.select('login').subscribe((loginState:LoginState) => {
+            expect(loginState.isLoggedIn).toBeFalsy();
+        });
+
+        expect(toastController.create).toHaveBeenCalledTimes(1);
 
     });
 });

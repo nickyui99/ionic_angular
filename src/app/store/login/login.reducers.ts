@@ -54,11 +54,11 @@ const reducer = createReducer(AppInitialState.login,
             isLoggingIn: false,
         }
     }),
-    on(loginFail, (currentState: LoginState) => {
+    on(loginFail, (currentState: LoginState, action) => {
 
         return {
             ...currentState,
-            error: null,
+            error: action.error,
             isLoggedIn: false,
             isLoggingIn: false,
         }
