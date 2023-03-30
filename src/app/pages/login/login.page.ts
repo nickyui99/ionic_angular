@@ -7,6 +7,7 @@ import {AppState} from "@capacitor/app";
 import {recoverPassword} from "../../store/login/login.actions";
 import {hide, show} from "../../store/loading/loading.actions";
 import {ToastController} from "@ionic/angular";
+import {LoginState} from "../../store/login/LoginState";
 
 @Component({
   selector: 'app-login',
@@ -28,25 +29,32 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     // @ts-ignore
-    this.store.select("login").subscribe(async (loginState:any)=> {
-      if (loginState.isRecoveringPassword) {
-        this.store.dispatch(show());
-      }
-
-      if (loginState.isRecoveredPassword) {
-        this.store.dispatch(hide());
-        try {
-          const toast = await this.toastController.create({
-            message: 'Hello World!',
-            duration: 1500,
-            position: "bottom"
-          });
-          await toast.present();
-        } catch (err) {
-          console.error(err);
-        }
-      }
+    this.store.select("login").subscribe((loginState: LoginState)=> {
+      this.onIsRecoveredpassword(loginState);
+      this.onIsRecoveringPassword(loginState);
     });
+  }
+
+  private async onIsRecoveringPassword(loginState: LoginState){
+    if (loginState.isRecoveringPassword) {
+      this.store.dispatch(show());
+    }
+  }
+
+  private async onIsRecoveredpassword(loginState: LoginState){
+    if (loginState.isRecoveredPassword) {
+      this.store.dispatch(hide());
+      try {
+        const toast = await this.toastController.create({
+          message: 'Hello World!',
+          duration: 1500,
+          position: "bottom"
+        });
+        await toast.present();
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 
   forgotEmailPassword(){
