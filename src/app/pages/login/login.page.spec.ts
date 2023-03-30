@@ -9,7 +9,7 @@ import {Store, StoreModule} from "@ngrx/store";
 import {loadingReducer} from "../../store/loading/loading.reducers";
 import {loginReducer} from "../../store/login/login.reducers";
 import {AppState} from "../../store/AppState";
-import {recoverPassword, recoverPasswordSuccess} from "../../store/login/login.actions";
+import {recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "../../store/login/login.actions";
 import {AppStoreModule} from "../../store/AppStoreModule";
 
 describe('LoginPage', () => {
@@ -88,4 +88,17 @@ describe('LoginPage', () => {
 
         expect(toastController.create).toHaveBeenCalledTimes(1);
     });
+
+    // it('should hide loading and show error message when error on recover password', () => {
+    //     spyOn(toastController, 'create');
+    //
+    //     fixture.detectChanges();
+    //     store.dispatch(recoverPassword());
+    //     store.dispatch(recoverPasswordFail({error: "message"}));
+    //     store.select('loading').subscribe(loadingState => {
+    //         expect(loadingState.show).toBeFalsy();
+    //     });
+    //
+    //     expect(toastController.create).toHaveBeenCalledTimes(1);
+    // })
 });

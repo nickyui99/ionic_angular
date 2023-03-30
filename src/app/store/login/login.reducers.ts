@@ -18,7 +18,7 @@ const reducer = createReducer(AppInitialState.login,
             ...currentState,
             error: null,
             isRecoveredPassword: true,
-            isRecoveringPassword: true
+            isRecoveringPassword: false
         };
     }),
     on(recoverPasswordFail, (currentState, action) => {

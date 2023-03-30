@@ -1,6 +1,6 @@
 import {LoginState} from "./LoginState";
 import {loginReducer} from "./login.reducers";
-import {recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "./login.actions";
+import {login, recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "./login.actions";
 import {AppInitialState} from "../AppInitialState";
 
 describe("Login store", () => {
@@ -22,7 +22,7 @@ describe("Login store", () => {
             ...initialState,
             error: null,
             isRecoveredPassword: true,
-            isRecoveringPassword: true
+            isRecoveringPassword: false
         });
     });
 
@@ -37,5 +37,16 @@ describe("Login store", () => {
             isRecoveredPassword: false,
             isRecoveringPassword: false
         });
+    });
+
+    it('login', function () {
+        const initialState: LoginState = AppInitialState.login;
+        const newState = loginReducer(initialState, login());
+        expect(newState).toEqual({
+            ...initialState,
+            error: null,
+            isLoggedIn: false,
+            isLoggingIn: true,
+        })
     });
 })
