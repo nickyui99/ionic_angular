@@ -11,6 +11,7 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {LoadingComponent} from "./components/loading/loading.component";
 import {environment} from "../environments/environment";
 import {AngularFireModule} from "@angular/fire/compat";
+import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
 
 @NgModule({
     declarations: [AppComponent, LoadingComponent],
@@ -19,6 +20,7 @@ import {AngularFireModule} from "@angular/fire/compat";
         IonicModule.forRoot(),
         AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireDatabaseModule,
         ...AppStoreModule,
         StoreDevtoolsModule.instrument({maxAge: 25}),
 

@@ -14,7 +14,9 @@ import {AppStoreModule} from "../../store/AppStoreModule";
 import {LoginState} from "../../store/login/LoginState";
 import {AuthService} from "../../services/auth/auth.service";
 import {User} from "../../model/user/User";
-import {of, throwError} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
+import {AngularFireModule} from "@angular/fire/compat";
+import {environment} from "../../../environments/environment";
 
 describe('LoginPage', () => {
     let component: LoginPage;
@@ -31,6 +33,7 @@ describe('LoginPage', () => {
                 IonicModule.forRoot(),
                 AppRoutingModule,
                 ReactiveFormsModule,
+                AngularFireModule.initializeApp(environment.firebaseConfig),
                 AppStoreModule,
                 StoreModule.forRoot([]),
                 StoreModule.forFeature("loading", loadingReducer),
@@ -47,17 +50,11 @@ describe('LoginPage', () => {
         fixture.detectChanges();
     }));
 
-    it('should create form on init', () => {
+    it('should create form on init', async () => {
         component.ngOnInit();
 
         expect(component.form).not.toBeUndefined();
     });
-
-    // it('should go to the home page', () => {
-    //     spyOn(router, 'navigate');
-    //     component.login();
-    //     expect(router.navigate).toHaveBeenCalledWith(['home']);
-    // });
 
     it('should go to the registration page', () => {
         spyOn(router, 'navigate');
@@ -65,18 +62,14 @@ describe('LoginPage', () => {
         expect(router.navigate).toHaveBeenCalledWith(['register']);
     });
 
-    it('should recover email/password on forgot email/password', function () {
+    it('should recover email/password on forgot email/password', async () => {
         fixture.detectChanges();
         component.form.get('email')?.setValue('valid@email.com');
         fixture.debugElement.nativeElement.querySelector('#recoverPasswordButton').click();
         store.select('login').subscribe(loginState => {
             expect(loginState.isRecoveringPassword).toBeTruthy();
         });
-    });
 
-    it('should show loading when recovering password', function () {
-        fixture.detectChanges();
-        store.dispatch(recoverPassword());
         store.select('loading').subscribe(loadingState => {
             expect(loadingState.show).toBeTruthy();
         });
@@ -108,7 +101,9 @@ describe('LoginPage', () => {
         expect(toastController.create).toHaveBeenCalledTimes(1);
     });
 
-    it("should show loading and start login when logging in", () => {
+    it("should show loading and start login when logging in", async () => {
+        spyOn(authService, 'login').and.returnValues(new Observable(() => {}));
+
         fixture.detectChanges();
 
         component.form.get('email')?.setValue('valid@mail.com');
@@ -125,7 +120,7 @@ describe('LoginPage', () => {
         })
     });
 
-    it('should hide loading and send user to home page when user has logged in', function () {
+    it('should hide loading and send user to home page when user has logged in', async () => {
         spyOn(router, 'navigate');
         spyOn(authService, 'login').and.returnValues(of(new User()));
 
@@ -146,7 +141,7 @@ describe('LoginPage', () => {
         expect(router.navigate).toHaveBeenCalledWith(['home']);
     });
 
-    it('should hide loading and show error when user couldnt login', function () {
+    it('should hide loading and show error when user couldnt login', () => {
         spyOn(authService, 'login').and.returnValues(throwError({message: 'error'}));
         spyOn(toastController, 'create').and.returnValues(<any> Promise.resolve({present: () => {}}));
 
