@@ -9,7 +9,13 @@ import {Store, StoreModule} from "@ngrx/store";
 import {loadingReducer} from "../../store/loading/loading.reducers";
 import {loginReducer} from "../../store/login/login.reducers";
 import {AppState} from "../../store/AppState";
-import {recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "../../store/login/login.actions";
+import {
+  login,
+  loginFail, loginSuccess,
+  recoverPassword,
+  recoverPasswordFail,
+  recoverPasswordSuccess
+} from "../../store/login/login.actions";
 import {AppStoreModule} from "../../store/AppStoreModule";
 import {LoginState} from "../../store/login/LoginState";
 import {AuthService} from "../../services/auth/auth.service";
@@ -122,17 +128,11 @@ describe('LoginPage', () => {
 
     it('should hide loading and send user to home page when user has logged in', async () => {
         spyOn(router, 'navigate');
-        spyOn(authService, 'login').and.returnValues(of(new User()));
 
         fixture.detectChanges();
 
-        component.form.get('email')?.setValue('valid@mail.com');
-        component.form.get('password')?.setValue('anyPassword');
-        fixture.debugElement.nativeElement.querySelector('#loginButton').click();
-
-        store.select('login').subscribe((loginState:LoginState) => {
-            expect(loginState.isLoggedIn).toBeTruthy();
-        });
+        store.dispatch(login());
+        store.dispatch(loginSuccess({user: new User()}));
 
         store.select('loading').subscribe(loadingState => {
             expect(loadingState.show).toBeFalsy();
@@ -142,20 +142,14 @@ describe('LoginPage', () => {
     });
 
     it('should hide loading and show error when user couldnt login', () => {
-        spyOn(authService, 'login').and.returnValues(throwError({message: 'error'}));
         spyOn(toastController, 'create').and.returnValues(<any> Promise.resolve({present: () => {}}));
 
         fixture.detectChanges();
-
-        component.form.get('email')?.setValue('error@mail.com');
-        component.form.get('password')?.setValue('anyPassword');
-        fixture.debugElement.nativeElement.querySelector('#loginButton').click();
+        store.dispatch(login());
+        store.dispatch(loginFail({error: {message: 'error'}}));
 
         store.select('loading').subscribe(loadingState => {
             expect(loadingState.show).toBeFalsy();
-        });
-        store.select('login').subscribe((loginState:LoginState) => {
-            expect(loginState.isLoggedIn).toBeFalsy();
         });
 
         expect(toastController.create).toHaveBeenCalledTimes(1);
