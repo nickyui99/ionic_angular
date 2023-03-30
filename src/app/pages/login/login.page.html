@@ -18,7 +18,7 @@
                     </ion-item>
                     <app-error-message *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['minlength']" message="Must have minimum 8 characters"></app-error-message>
                     <ion-button color="dark" fill="clear" size="full" (click)="forgotEmailPassword()" id="recoverPasswordButton">Forgot email / password</ion-button>
-                    <ion-button color="success" size="full" (click)="login()" [disabled]="!form.valid">Login</ion-button>
+                    <ion-button color="success" size="full" (click)="login()" [disabled]="!form.valid" id="loginButton">Login</ion-button>
                     <ion-button color="success" fill="clear" size="full" (click)="register()">Register</ion-button>
                 </ion-card-content>
             </ion-card>

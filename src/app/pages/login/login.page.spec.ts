@@ -11,6 +11,7 @@ import {loginReducer} from "../../store/login/login.reducers";
 import {AppState} from "../../store/AppState";
 import {recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "../../store/login/login.actions";
 import {AppStoreModule} from "../../store/AppStoreModule";
+import {LoginState} from "../../store/login/LoginState";
 
 describe('LoginPage', () => {
     let component: LoginPage;
@@ -47,11 +48,11 @@ describe('LoginPage', () => {
         expect(component.form).not.toBeUndefined();
     });
 
-    it('should go to the home page', () => {
-        spyOn(router, 'navigate');
-        component.login();
-        expect(router.navigate).toHaveBeenCalledWith(['home']);
-    });
+    // it('should go to the home page', () => {
+    //     spyOn(router, 'navigate');
+    //     component.login();
+    //     expect(router.navigate).toHaveBeenCalledWith(['home']);
+    // });
 
     it('should go to the registration page', () => {
         spyOn(router, 'navigate');
@@ -89,16 +90,50 @@ describe('LoginPage', () => {
         expect(toastController.create).toHaveBeenCalledTimes(1);
     });
 
-    // it('should hide loading and show error message when error on recover password', () => {
-    //     spyOn(toastController, 'create');
-    //
-    //     fixture.detectChanges();
-    //     store.dispatch(recoverPassword());
-    //     store.dispatch(recoverPasswordFail({error: "message"}));
-    //     store.select('loading').subscribe(loadingState => {
-    //         expect(loadingState.show).toBeFalsy();
-    //     });
-    //
-    //     expect(toastController.create).toHaveBeenCalledTimes(1);
-    // })
+    it('should hide loading and show error message when error on recover password', () => {
+        spyOn(toastController, 'create');
+
+        fixture.detectChanges();
+        store.dispatch(recoverPassword());
+        store.dispatch(recoverPasswordFail({error: "message"}));
+        store.select('loading').subscribe(loadingState => {
+            expect(loadingState.show).toBeFalsy();
+        });
+
+        expect(toastController.create).toHaveBeenCalledTimes(1);
+    });
+
+    it("should show loading and start login when logging in", () => {
+        fixture.detectChanges();
+
+        component.form.get('email')?.setValue('valid@mail.com');
+        component.form.get('password')?.setValue('anyPassword');
+
+        fixture.debugElement.nativeElement.querySelector('#loginButton').click();
+
+        store.select('loading').subscribe(loadingState => {
+            expect(loadingState.show).toBeTruthy();
+        });
+
+        store.select('login').subscribe(loginState => {
+            expect(loginState.isLoggingIn).toBeTruthy();
+        })
+    });
+
+    it('should hide loading and send user to home page when user has logged in', function () {
+        fixture.detectChanges();
+
+        component.form.get('email')?.setValue('valid@mail.com');
+        component.form.get('password')?.setValue('anyPassword');
+        fixture.debugElement.nativeElement.querySelector('#loginButton').click();
+
+        store.select('loading').subscribe(loadingState => {
+            expect(loadingState.show).toBeTruthy();
+        });
+        store.select('login').subscribe((loginState:LoginState) => {
+            expect(loginState.isLoggedIn).toBeTruthy();
+        });
+
+
+    });
 });

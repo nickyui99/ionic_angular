@@ -1,7 +1,15 @@
 import {LoginState} from "./LoginState";
 import {loginReducer} from "./login.reducers";
-import {login, recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "./login.actions";
+import {
+    login,
+    loginFail,
+    loginSuccess,
+    recoverPassword,
+    recoverPasswordFail,
+    recoverPasswordSuccess
+} from "./login.actions";
 import {AppInitialState} from "../AppInitialState";
+import {User} from "../../model/user/User";
 
 describe("Login store", () => {
     it('recover password', function () {
@@ -47,6 +55,38 @@ describe("Login store", () => {
             error: null,
             isLoggedIn: false,
             isLoggingIn: true,
+        })
+    });
+
+    it('loginSuccess', function () {
+        const initialState: LoginState = {
+            ...AppInitialState.login,
+            isLoggingIn: true,
+        };
+        const user = new User();
+        user.id = "anyId";
+        const newState = loginReducer(initialState, loginSuccess({user}));
+        expect(newState).toEqual({
+            ...initialState,
+            error: null,
+            isLoggedIn: true,
+            isLoggingIn: false,
+        })
+    });
+
+    it('loginFail', function () {
+        const initialState: LoginState = {
+            ...AppInitialState.login,
+            isLoggingIn: true,
+        };
+        const user = new User();
+        user.id = "anyId";
+        const newState = loginReducer(initialState, loginFail({user}));
+        expect(newState).toEqual({
+            ...initialState,
+            error: null,
+            isLoggedIn: false,
+            isLoggingIn: false,
         })
     });
 })
