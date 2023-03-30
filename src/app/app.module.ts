@@ -9,10 +9,20 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppStoreModule} from "./store/AppStoreModule";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {LoadingComponent} from "./components/loading/loading.component";
+import {environment} from "../environments/environment";
+import {AngularFireModule} from "@angular/fire/compat";
 
 @NgModule({
     declarations: [AppComponent, LoadingComponent],
-    imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ...AppStoreModule, StoreDevtoolsModule.instrument({maxAge: 25})],
+    imports: [
+        BrowserModule,
+        IonicModule.forRoot(),
+        AppRoutingModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        ...AppStoreModule,
+        StoreDevtoolsModule.instrument({maxAge: 25}),
+
+    ],
     providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
     bootstrap: [AppComponent],
 })
