@@ -110,9 +110,10 @@ export class LoginPage implements OnInit, OnDestroy {
       console.log("is recovered password");
       try {
         const toast = await this.toastController.create({
-          message: 'Hello World!',
+          message: 'An reset password Email has been sent to your mailbox.',
           duration: 1500,
-          position: "bottom"
+          position: "bottom",
+          color: "primary"
         });
         await toast.present();
       } catch (err) {
