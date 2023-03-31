@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule, ToastController} from '@ionic/angular';
 
 import {LoginPage} from './login.page';
@@ -32,7 +32,7 @@ describe('LoginPage', () => {
   let toastController: ToastController;
   let authService: AuthService;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [LoginPage],
       imports: [
@@ -81,7 +81,7 @@ describe('LoginPage', () => {
     });
   });
 
-  it('given user is recovering password,  when success, then hide loading and show success message', function () {
+  it('given user is recovering password,  when success, then hide loading and show success message',  async () => {
     spyOn(toastController, 'create');
 
     fixture.detectChanges();
@@ -94,12 +94,14 @@ describe('LoginPage', () => {
     expect(toastController.create).toHaveBeenCalledTimes(1);
   });
 
-  it('given user is recovering password,  when fail, then hide loading and show error message', () => {
+  it('given user is recovering password,  when fail, then hide loading and show error message', async () => {
     spyOn(toastController, 'create');
 
     fixture.detectChanges();
+
     store.dispatch(recoverPassword());
     store.dispatch(recoverPasswordFail({error: "message"}));
+
     store.select('loading').subscribe(loadingState => {
       expect(loadingState.show).toBeFalsy();
     });
@@ -142,7 +144,7 @@ describe('LoginPage', () => {
     expect(router.navigate).toHaveBeenCalledWith(['home']);
   });
 
-  it('given user is logging in, when fail, then hide loading and show error message', () => {
+  it('given user is logging in, when fail, then hide loading and show error message', async () => {
     spyOn(toastController, 'create').and.returnValues(<any>Promise.resolve({
       present: () => {
       }
