@@ -16,7 +16,6 @@ export class AuthGuard implements CanActivate {
         return this.afAuth.authState.pipe(
             map(user => {
                 if (user) {
-                    this.router.navigateByUrl('home');
 
                     return true;
                 } else {

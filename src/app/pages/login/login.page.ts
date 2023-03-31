@@ -11,6 +11,7 @@ import {LoginState} from "../../store/login/LoginState";
 import {Subscription} from "rxjs";
 import {User} from "../../model/user/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {navigate} from "ionicons/icons";
 
 @Component({
   selector: 'app-login',
@@ -30,23 +31,21 @@ export class LoginPage implements OnInit, OnDestroy {
       private fAuth: AngularFireAuth
   ) {
     this.form = new LoginPageForm(this.formBuilder).createForm();
+  }
+
+  ngOnInit() {
 
     if(this.fAuth.authState){
       console.log("loginSuccess");
       loginSuccess({user: new User()});
+      this.router.navigate(['home']);
     }
-  }
-
-  ngOnInit() {
     // @ts-ignore
     const loginStateSubscription = this.store.select("login").subscribe((loginState: LoginState)=> {
       console.log(loginState);
-
       this.onIsRecoveredpassword(loginState);
-
       this.onIsLoggedIn(loginState);
       this.onError(loginState);
-
       this.toggleLoading(loginState);
     });
   }
