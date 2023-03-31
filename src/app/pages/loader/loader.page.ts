@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {navigate} from "ionicons/icons";
+import {loginSuccess} from "../../store/login/login.actions";
+import {User} from "../../model/user/User";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
 
 @Component({
   selector: 'app-loader',
@@ -9,10 +12,11 @@ import {navigate} from "ionicons/icons";
 })
 export class LoaderPage implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private fAuth: AngularFireAuth) {
+  }
 
   ngOnInit() {
-    this.router.navigate(['login'])
+    this.router.navigate(['home']);
   }
 
 }

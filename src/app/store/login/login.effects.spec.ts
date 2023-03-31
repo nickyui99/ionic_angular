@@ -2,7 +2,14 @@ import {LoginEffects} from "./login.effects";
 import {Observable, of, throwError} from "rxjs";
 import {Action, StoreModule} from "@ngrx/store";
 import {TestBed, waitForAsync} from "@angular/core/testing";
-import {login, loginSuccess, recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "./login.actions";
+import {
+    login,
+    loginFail,
+    loginSuccess,
+    recoverPassword,
+    recoverPasswordFail,
+    recoverPasswordSuccess
+} from "./login.actions";
 import {EffectsModule} from "@ngrx/effects";
 import {provideMockActions} from "@ngrx/effects/testing";
 import {AuthService} from "../../services/auth/auth.service";
@@ -21,6 +28,12 @@ describe('Login effects', () => {
                 return throwError({error: 'error'});
             }
             return of({});
+        },
+        login: (email: string, password: string) => {
+            if (email == "error@mail.com"){
+                return throwError(error);
+            }
+            return of(user);
         }
     }
 
@@ -66,5 +79,14 @@ describe('Login effects', () => {
             expect(newAction).toEqual(loginSuccess({user}));
             done();
         })
-    })
+    });
+
+    it('should login with invalid credentials return error message', done => {
+        actions$ = of(login({email: "error@mail.com", password: "test12345"}));
+
+        effects.login$.subscribe(newAction => {
+            expect(newAction).toEqual(loginFail({error}));
+            done();
+        })
+    });
 })

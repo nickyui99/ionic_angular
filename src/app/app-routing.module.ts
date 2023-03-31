@@ -1,19 +1,22 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import {AuthGuard} from "./guards/auth/auth-guard.service";
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'loader',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
     path: 'loader',
-    loadChildren: () => import('./pages/loader/loader.module').then( m => m.LoaderPageModule)
+    loadChildren: () => import('./pages/loader/loader.module').then( m => m.LoaderPageModule),
+
   },
   {
     path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'register',
@@ -21,21 +24,24 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'pickupcall',
-    loadChildren: () => import('./pages/pickupcall/pickupcall.module').then( m => m.PickupcallPageModule)
+    loadChildren: () => import('./pages/pickupcall/pickupcall.module').then( m => m.PickupcallPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'pickupcalls',
-    loadChildren: () => import('./pages/pickupcalls/pickupcalls.module').then( m => m.PickupcallsPageModule)
+    loadChildren: () => import('./pages/pickupcalls/pickupcalls.module').then( m => m.PickupcallsPageModule),
+    canActivate: [AuthGuard]
   }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
   ],
   exports: [RouterModule]
 })

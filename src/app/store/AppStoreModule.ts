@@ -11,5 +11,6 @@ export const AppStoreModule = [
     EffectsModule.forRoot([]),
     EffectsModule.forFeature([
         LoginEffects
-    ])
+    ]),
+
 ]

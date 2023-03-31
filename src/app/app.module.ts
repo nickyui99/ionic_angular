@@ -11,7 +11,9 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {LoadingComponent} from "./components/loading/loading.component";
 import {environment} from "../environments/environment";
 import {AngularFireModule} from "@angular/fire/compat";
-import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
+import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
+import {AngularFireAuthModule} from "@angular/fire/compat/auth";
+import {StoreModule} from "@ngrx/store";
 
 @NgModule({
     declarations: [AppComponent, LoadingComponent],
@@ -20,9 +22,11 @@ import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
         IonicModule.forRoot(),
         AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFireDatabaseModule,
+        AngularFireAuthModule,
+        AngularFirestoreModule,
         ...AppStoreModule,
         StoreDevtoolsModule.instrument({maxAge: 25}),
+        StoreModule.forRoot([]),
 
     ],
     providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],

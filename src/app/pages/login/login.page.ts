@@ -4,11 +4,13 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {LoginPageForm} from "./login.page.form";
 import {Store} from "@ngrx/store";
 import {AppState} from "@capacitor/app";
-import {login, recoverPassword} from "../../store/login/login.actions";
+import {login, loginSuccess, recoverPassword} from "../../store/login/login.actions";
 import {hide, show} from "../../store/loading/loading.actions";
 import {ToastController} from "@ionic/angular";
 import {LoginState} from "../../store/login/LoginState";
 import {Subscription} from "rxjs";
+import {User} from "../../model/user/User";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
 
 @Component({
   selector: 'app-login',
@@ -25,8 +27,14 @@ export class LoginPage implements OnInit, OnDestroy {
       private formBuilder: FormBuilder,
       private store: Store<AppState>,
       private toastController: ToastController,
+      private fAuth: AngularFireAuth
   ) {
     this.form = new LoginPageForm(this.formBuilder).createForm();
+
+    if(this.fAuth.authState){
+      console.log("loginSuccess");
+      loginSuccess({user: new User()});
+    }
   }
 
   ngOnInit() {
