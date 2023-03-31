@@ -1,15 +1,19 @@
 import {LoginEffects} from "./login.effects";
 import {Observable, of, throwError} from "rxjs";
 import {Action, StoreModule} from "@ngrx/store";
-import {TestBed} from "@angular/core/testing";
-import {recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "./login.actions";
+import {TestBed, waitForAsync} from "@angular/core/testing";
+import {login, loginSuccess, recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "./login.actions";
 import {EffectsModule} from "@ngrx/effects";
 import {provideMockActions} from "@ngrx/effects/testing";
 import {AuthService} from "../../services/auth/auth.service";
+import {User} from "../../model/user/User";
+
 
 describe('Login effects', () => {
     let effects: LoginEffects;
     let actions$: Observable<Action>;
+    let user = new User();
+    user.id = "anyId"
     let error = {error: 'error'};
     let authServiceMock = {
         recoverEmailPassword: (email: string) => {
@@ -38,7 +42,7 @@ describe('Login effects', () => {
     });
 
     it('should recover password with existing email return success', (done) => {
-        actions$ = of(recoverPassword());
+        actions$ = of(recoverPassword({email: "nicholas10@mail.com"}));
 
         effects.recoverPassword$.subscribe(newAction => {
             expect(newAction).toEqual(recoverPasswordSuccess());
@@ -47,11 +51,20 @@ describe('Login effects', () => {
     });
 
     it('should recover password with not existing email return an error', function (done) {
-        actions$ = of(recoverPassword());
+        actions$ = of(recoverPassword({email: "error@mail.com"}));
 
         effects.recoverPassword$.subscribe(newAction => {
             expect(newAction).toEqual(recoverPasswordFail({error}));
             done();
         })
     });
+
+    it('should login with valid credentials return success', done => {
+        actions$ = of(login({email: "test@mail.com", password: "test12345"}));
+
+        effects.login$.subscribe(newAction => {
+            expect(newAction).toEqual(loginSuccess({user}));
+            done();
+        })
+    })
 })

@@ -58,42 +58,20 @@ export class LoginPage implements OnInit, OnDestroy {
     }
   }
 
-  // private onIsLoggingIn(loginState: LoginState){
-  //   if (loginState.isLoggingIn){
-  //     const email = this.form.get('email')?.value;
-  //     const password = this.form.get('password')?.value;
-  //     this.authService.login(email,password).subscribe(user => {
-  //       this.store.dispatch(loginSuccess({user}));
-  //     }, (error) => {
-  //       this.store.dispatch(loginFail({error}));
-  //     })
-  //   }
-  // }
-
   private onIsLoggedIn(loginState:LoginState){
     if(loginState.isLoggedIn){
       this.router.navigate(['home']);
     }
   }
 
-  // private async onIsRecoveringPassword(loginState: LoginState){
-  //   if (loginState.isRecoveringPassword) {
-  //     console.log("is recovering password");
-  //
-  //     this.authService.recoverEmailPassword(this.form.get('email')?.value).subscribe(() => {
-  //       this.store.dispatch(recoverPasswordSuccess());
-  //
-  //     }, error => this.store.dispatch(recoverPasswordFail({error})) )
-  //   }
-  // }
-
   private async onError(loginState: LoginState){
 
     if(loginState.error){
       console.log("is recover password fail");
       try {
+        console.log(loginState.error.message.Firebase);
         const toast = await this.toastController.create({
-          message: loginState.error.message,
+          message: loginState.error.message.replace('Firebase: ', '').replace(/\(auth.*\)\.?/, ''),
           duration: 1500,
           position: "bottom",
           color: "danger"
@@ -110,7 +88,7 @@ export class LoginPage implements OnInit, OnDestroy {
       console.log("is recovered password");
       try {
         const toast = await this.toastController.create({
-          message: 'An reset password Email has been sent to your mailbox.',
+          message: 'An reset password email has been sent to your mailbox.',
           duration: 1500,
           position: "bottom",
           color: "primary"
@@ -123,11 +101,14 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   forgotEmailPassword(){
-    this.store.dispatch(recoverPassword());
+    this.store.dispatch(recoverPassword({ email: this.form.get('email')?.value }));
   }
 
   login(){
-    this.store.dispatch(login());
+    this.store.dispatch(login({
+      email: this.form.get('email')?.value,
+      password: this.form.get('password')?.value,
+    }));
   }
 
   register(){

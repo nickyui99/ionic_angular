@@ -14,7 +14,7 @@ import {User} from "../../model/user/User";
 describe("Login store", () => {
     it('recover password', function () {
         const initialState: LoginState = AppInitialState.login;
-        const newState = loginReducer(initialState, recoverPassword());
+        const newState = loginReducer(initialState, recoverPassword({email: "test@mail.com"}));
         expect(newState).toEqual({
             ...initialState,
             error: null,
@@ -49,7 +49,7 @@ describe("Login store", () => {
 
     it('login', function () {
         const initialState: LoginState = AppInitialState.login;
-        const newState = loginReducer(initialState, login());
+        const newState = loginReducer(initialState, login({email: "test@mail.com", password: "test12345"}));
         expect(newState).toEqual({
             ...initialState,
             error: null,
